@@ -23,6 +23,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: simple-website
         IMAGE_TAG: latest
+        AWS_REGION: us-east-2
       run: |
         # We will build a new docker container and
         # we will push it to ECR
