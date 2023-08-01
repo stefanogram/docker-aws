@@ -1,33 +1,100 @@
-<!-- public-html/index.html -->
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Simple html page running on docker</title>
-</head>
-<body>
-  <main>
-      <h1>Version: 1.0.0</h1>
-      </p>Basic versioning APP</p>
-    <p> This is the first version of this app very simple versioning app</p>
-    <br>
-        <p>Go and clone this <a href="https://github.com/stefanogram/docker-aws">here</a></p>
-          <p>create a <a href="https://github.com/stefanogram/docker-aws/pulls">Pull Request</a>in the Github repo</p>
-    <br>
-        <p>Wait a couple of minutes and see your changes</p>
-    <br>
-          <p>You can find the full documentation <a href="https://devops.stefanogramm.com/devops/">here</a></p>
-    <hr>
-  </main>
+  <head>
+    <title>Simple html page running on docker</title>
+    <!-- adding snipcart -->
+    <link rel="preconnect" href="https://app.snipcart.com">
+    <link rel="preconnect" href="https://cdn.snipcart.com">
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
+    <!-- custom styles -->
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 10px;
+        font-size: 16px;
+      }
 
-</body>
+      @media screen and (max-width: 600px) {
+        body {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+        <main>
+            <h1>Version: 1.0.0</h1>
+            <p>Basic versioning APP </p>
+            <p> This is the first version of this app very simple versioning app</p>
+            <br>
+            <p>Go and clone this <a href="https://github.com/stefanogram/docker-aws">here</a>
+            </p>
+            <p>create a <a href="https://github.com/stefanogram/docker-aws/pulls">Pull Request</a> in the Github repo </p>
+            <br>
+            <p>Wait a couple of minutes and see your changes</p>
+            <br>
+            <p>You can find the full documentation <a href="https://devops.stefanogramm.com/devops/">here</a>
+            </p>
+            <hr>
+            <hr>
+            <hr>
 
-<script>
-  window.SnipcartSettings = {
-      publicApiKey: 'M2EzODMzZTctMzljOS00YTBmLTkxYzgtMmYwYWEwZDk2ZDNkNjM2OTU3NTk3ODQ0MDg5MjQ0',
-      loadStrategy: 'on-user-interaction',
-  };
+            <!-- snipcart template -->
+            <div>
+              <h2>Product Name</h2>
+              <p>Description of the product</p>
+              <p>Price: $ <span class="price">50.00</span>
+              </p>
+              <button class="snipcart-add-item" data-item-id="1" data-item-price="50.00" data-item-url="/" data-item-name="Keep it simple" data-item-description="Just Simple" data-item-image="https://preview.redd.it/bhm73iaapb581.gif?format=png8&s=4bb766b69e37e4ea0361ab09db7704ec626f2e35"> Add to Cart </button>
+            </div>
+          </main>
 
-  (()=>{var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var f=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,m=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(m.forEach(t=>document.addEventListener(t,o)),setTimeout(o,window.SnipcartSettings.timeoutDuration)):o()}var a=!1;function o(){if(a)return;a=!0;let t=document.getElementsByTagName("head")[0],e=document.querySelector("#snipcart"),i=document.querySelector(`src[src^="${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}"][src$="snipcart.js"]`),n=document.querySelector(`link[href^="${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}"][href$="snipcart.css"]`);e||(e=document.createElement("div"),e.id="snipcart",e.setAttribute("hidden","true"),document.body.appendChild(e)),v(e),i||(i=document.createElement("script"),i.src=`${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}/themes/v${window.SnipcartSettings.version}/default/snipcart.js`,i.async=!0,t.appendChild(i)),n||(n=document.createElement("link"),n.rel="stylesheet",n.type="text/css",n.href=`${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}/themes/v${window.SnipcartSettings.version}/default/snipcart.css`,t.prepend(n)),m.forEach(g=>document.removeEventListener(g,o))}function v(t){!f||(t.dataset.apiKey=window.SnipcartSettings.publicApiKey,window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl))}})();
-</script>
+    <!-- snipcart juat a test open api here -->
+    <script>
+        window.SnipcartSettings = {
+          publicApiKey: 'M2EzODMzZTctMzljOS00YTBmLTkxYzgtMmYwYWEwZDk2ZDNkNjM2OTU3NTk3ODQ0MDg5MjQ0',
+          loadStrategy: 'on-user-interaction',
+        };
+        (() => {
+          var c, d;
+          (d = (c = window.SnipcartSettings).version) != null || (c.version = "3.0");
+          var s, S;
+          (S = (s = window.SnipcartSettings).timeoutDuration) != null || (s.timeoutDuration = 2750);
+          var l, p;
+          (p = (l = window.SnipcartSettings).domain) != null || (l.domain = "cdn.snipcart.com");
+          var w, u;
+          (u = (w = window.SnipcartSettings).protocol) != null || (w.protocol = "https");
+          var f = window.SnipcartSettings.version.includes("v3.0.0-ci") || window.SnipcartSettings.version != "3.0" && window.SnipcartSettings.version.localeCompare("3.4.0", void 0, {
+              numeric: !0,
+              sensitivity: "base"
+            }) === -1,
+            m = ["focus", "mouseover", "touchmove", "scroll", "keydown"];
+          window.LoadSnipcart = o;
+          document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", r) : r();
+    
+          function r() {
+            window.SnipcartSettings.loadStrategy ? window.SnipcartSettings.loadStrategy === "on-user-interaction" && (m.forEach(t => document.addEventListener(t, o)), setTimeout(o, window.SnipcartSettings.timeoutDuration)) : o()
+          }
+          var a = !1;
+    
+          function o() {
+            if (a) return;
+            a = !0;
+            let t = document.getElementsByTagName("head")[0],
+              e = document.querySelector("#snipcart"),
+              i = document.querySelector(`src[src^="${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}"][src$="snipcart.js"]`),
+              n = document.querySelector(`link[href^="${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}"][href$="snipcart.css"]`);
+            e || (e = document.createElement("div"), e.id = "snipcart", e.setAttribute("hidden", "true"), document.body.appendChild(e)), v(e), i || (i = document.createElement("script"), i.src = `${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}/themes/v${window.SnipcartSettings.version}/default/snipcart.js`, i.async = !0, t.appendChild(i)), n || (n = document.createElement("link"), n.rel = "stylesheet", n.type = "text/css", n.href = `${window.SnipcartSettings.protocol}://${window.SnipcartSettings.domain}/themes/v${window.SnipcartSettings.version}/default/snipcart.css`, t.prepend(n)), m.forEach(g => document.removeEventListener(g, o))
+          }
+    
+          function v(t) {
+            !f || (t.dataset.apiKey = window.SnipcartSettings.publicApiKey, window.SnipcartSettings.addProductBehavior && (t.dataset.configAddProductBehavior = window.SnipcartSettings.addProductBehavior), window.SnipcartSettings.modalStyle && (t.dataset.configModalStyle = window.SnipcartSettings.modalStyle), window.SnipcartSettings.currency && (t.dataset.currency = window.SnipcartSettings.currency), window.SnipcartSettings.templatesUrl && (t.dataset.templatesUrl = window.SnipcartSettings.templatesUrl))
+          }
+        })();
+      </script>
 
+  </body>
 </html>
