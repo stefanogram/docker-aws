@@ -22,13 +22,37 @@
           font-size: 14px;
         }
       }
+
+
+            /* Add to cart button styling */
+            .snipcart-add-item {
+        background-color: #ff6347; /* Tomato color */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: 0.3s;
+      }
+
+      .snipcart-add-item:hover {
+        background-color: #ff4943; /* Darker tomato color when hovered */
+      }
+      
     </style>
   </head>
   <body>
         <main>
             <h1>Version: 1.0.0</h1>
             <p>Basic versioning APP </p>
-            <p> This is the first version of this app very simple versioning app</p>
+            <p> This is the first version of a very simple versioning app.</p>
+            <br>
+            <p> and a simple eshop Cart</p>
             <br>
             <p>Go and clone this <a href="https://github.com/stefanogram/docker-aws">here</a>
             </p>
@@ -44,8 +68,8 @@
 
             <!-- snipcart template to add cart -->
             <div>
-              <h2>Product Name</h2>
-              <p>Description of the product</p>
+              <h2>Just a keep it simple product</h2>
+              <p>Keep it simple</p>
               <p>Price: $ <span class="price">50.00</span>
               </p>
               <button class="snipcart-add-item" data-item-id="1" data-item-price="50.00" data-item-url="/" data-item-name="Keep it simple" data-item-description="Just Simple" data-item-image="https://preview.redd.it/bhm73iaapb581.gif?format=png8&s=4bb766b69e37e4ea0361ab09db7704ec626f2e35"> Add to Cart </button>
