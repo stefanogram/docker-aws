@@ -1,0 +1,148 @@
+Parameters:
+  InstanceType:
+    Description: micro ec2 instance with health checks
+    Type: String
+    Default: t2.micro
+
+  KeyName:
+    Description: stefano's keypair
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: stefano-us-east-2
+
+  ImageId:
+    Description: aws Image ID for this instance
+    Type: AWS::EC2::Image::Id
+    Default: ami-024e6efaf93d85776
+
+Resources:  
+  MyLaunchConfiguration:
+    Type: "AWS::AutoScaling::LaunchConfiguration"
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - "sg-a7f988c5"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo apt-get update -y
+          sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+          sudo apt-get update
+          sudo apt-get install -y docker-ce
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          sudo docker pull cr3w/simple-website:latest
+          sudo docker run -d -p 80:80 --name simple-website cr3w/simple-website:latest
+          echo '* * * * * root docker pull cr3w/simple-website:latest && docker stop simple-website && docker rm simple-website && docker run -d -p 80:80 --name simple-website cr3w/simple-website:latest' | sudo tee /etc/cron.d/simple-website-update
+          wget -O /tmp/netdata-kickstart.sh https://my-netdata.io/kickstart.sh &
+          wait
+          sh /tmp/netdata-kickstart.sh --nightly-channel --claim-token jkrulZscAyB25zUs1dg4HIuI3LOu-5LXqgQRY7tZku9wIwpxdFHjS-iJKQ7GW-WLlBkHtoOYNLtKUvkPqYag6w7ckRPhLz5oQtRHaWn1fKub5zC-08zt_7Tuc5R2Pfriy7grJ4o --claim-rooms 3fa28e8f-9668-4516-a068-989249586164 --claim-url https://app.netdata.cloud
+          docker run cloudflare/cloudflared:latest tunnel --no-autoupdate run --token $_token
+          sudo docker run -d -p 3000:3000 grafana/grafana
+        # 1. installing docker, and run a Grafana docker image on 3000 port
+        # 2. Creating and running a private tunnel from AWS <--> Cloudflare
+        # 3. deploys the app into Cloudflare edge where we 
+        # can use other functions if needed ( workers serverless code, zt sec etc)
+
+        # Watchtower
+          sudo docker run -d \
+            --name watchtower \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            containrrr/watchtower simple-website \
+            --interval 300
+
+        # echo '* * * * * root /usr/local/bin/aws ecr get-login-password --region us-east-2 | /usr/bin/docker login --username AWS --password-stdin 693505164922.dkr.ecr.us-east-2.amazonaws.com' | sudo tee /etc/cron.d/ecr-login
+        # this is a cript to periodically login to ECR and update Docker's config.json file
+        # !/bin/bash
+        # TOKEN=\$(aws ecr get-login-password --region us-east-2)
+        # echo "{ \"auths\": { \"693505164922.dkr.ecr.us-east-2.amazonaws.com\": { \"auth\": \"\$(echo AWS:\$TOKEN | base64)\" } } }" > /home/ubuntu/.docker/config.json              
+        # Restart Docker service to ensure it picks up the new config
+        # sudo service docker restart
+        # EOF
+        # execute the script
+        # chmod +x /home/ubuntu/ecr-login.sh
+        # /home/ubuntu/ecr-login.sh
+        # use cron to run this every 5 hours
+        # echo '0 */5 * * * ubuntu /home/ubuntu/ecr-login.sh' | sudo tee /etc/cron.d/ecr-login
+
+        # additinaly Jenkins running on  ssh root@161.35.223.47 --> http://161.35.223.47:8080/
+        # Workflow and Actions on GitHUb: https://github.com/stefanogram/docker-aws/actions
+
+
+  MyAutoScalingGroup:
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      AvailabilityZones:
+        - "us-east-2a"
+        - "us-east-2b"
+      MinSize: "2"
+      MaxSize: "2"
+      DesiredCapacity: "2"
+      HealthCheckType: EC2 
+      LaunchConfigurationName: !Ref MyLaunchConfiguration
+      TargetGroupARNs: 
+        - !Ref MyTargetGroup
+      
+  MyLoadBalancer:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties: 
+      Subnets:
+        - "subnet-feced596"
+        - "subnet-c7dc8dbd"
+        - "subnet-52d9611e"
+      SecurityGroups: 
+        - "sg-a7f988c5"
+
+  MyTargetGroup:
+    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: "/"
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Matcher:
+        HttpCode: '200'
+      Port: 80
+      Protocol: HTTP
+      VpcId: "vpc-73cb3818"
+      TargetType: "instance"
+
+  MyListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties: 
+      LoadBalancerArn: !Ref MyLoadBalancer
+      Protocol: HTTP
+      Port: 80
+      DefaultActions: 
+        - Type: forward
+          TargetGroupArn: !Ref MyTargetGroup
+
+
+
+
+# --------------------------------------------------------------------
+
+# to do --> https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-alarm.html
+# - AWS::CloudWatch::Alarm
+# MyCloudWatchAlarm:
+#    Type: 'AWS::CloudWatch::Alarm'
+#    Properties:
+#      AlarmName: 'CloudWatch LB-1'
+#      AlarmDescription: 'This is a 'CloudWatch Alarm if CPU utilization exceeds 80%'
+#      Namespace: 'AWS/EC2'
+#      MetricName: 'CPUUtilization'
+#      Statistic: 'Average'
+#      Period: '300'   # that will be 5 minutes
+#      EvaluationPeriods: '1'
+#      ComparisonOperator: 'GreaterThanThreshold'
+#      Threshold: '80'
+#      AlarmActions:
+#        - !Ref MyAutoScalingGroup  # Auto Scaling group ARN -> https://awscli.amazonaws.com/v2/documentation/api/latest/reference/autoscaling/describe-auto-scaling-groups.html
+#      Dimensions:
+#        - Name: AutoScalingGroupName
+#          Value: !Ref MyAutoScalingGroup  # The Auto Scaling group name
